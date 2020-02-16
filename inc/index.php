@@ -1,0 +1,25 @@
+<?php
+session_start();
+error_reporting(E_ALL ^ E_NOTICE);
+ini_set('display_errors', '1');
+ini_set('log_errors',TRUE);
+ini_set('html_errors',FALSE);
+ini_set('error_log','logs/error_log.txt');
+date_default_timezone_set('Africa/Cairo');
+require_once 'connection.php';
+require_once 'all_countries.php';
+require_once 'functions.php';
+require_once 'global.php';
+require_once 'csprng.php';
+require_once 'login_history.php';
+require_once 'class.upload.php';
+require_once 'PHPMailer-master/src/Exception.php';
+require_once 'PHPMailer-master/src/PHPMailer.php';
+require_once 'PHPMailer-master/src/SMTP.php';
+require_once 'admins.php';
+require_once 'functions_user.php';
+require_once 'users_table.php';
+require_once 'job_cat_table.php';
+require_once 'functions_company.php';
+require_once 'companies.php';
+require_once 'jobs_table.php';
