@@ -24,6 +24,67 @@ class jobs_table
         return $trans_data;
     }
 
+    public function retrieve_all_jobs_with_cat_id($job_cat_id)
+    {
+        $query = "SELECT * from ".$this->_table_name." where job_cat = ".$job_cat_id;
+        $result = $this->_dbh->query($query);
+        $trans_data = array();
+        while($row = mysqli_fetch_assoc($result))
+        {
+            $trans_data[] = $row;
+        }
+        return $trans_data;
+    }
+
+    public function retrieve_all_jobs_with_country_id($country_id)
+    {
+        $query = "SELECT * from ".$this->_table_name." where country_id = ".$country_id;
+        $result = $this->_dbh->query($query);
+        $trans_data = array();
+        while($row = mysqli_fetch_assoc($result))
+        {
+            $trans_data[] = $row;
+        }
+        return $trans_data;
+    }
+
+    public function retrieve_all_jobs_with_keyword($keyword)
+    {
+        $query = "SELECT * from ".$this->_table_name." where job_title like '%".$keyword."%' ";
+        $result = $this->_dbh->query($query);
+        $trans_data = array();
+        while($row = mysqli_fetch_assoc($result))
+        {
+            $trans_data[] = $row;
+        }
+        return $trans_data;
+    }
+
+    public function retrieve_all_jobs_with_country_id_and_cat_id($country_id, $job_cat_id)
+    {
+        $query = "SELECT * from ".$this->_table_name." where country_id = ".$country_id." and job_cat = ".$job_cat_id;
+        $result = $this->_dbh->query($query);
+        $trans_data = array();
+        while($row = mysqli_fetch_assoc($result))
+        {
+            $trans_data[] = $row;
+        }
+        return $trans_data;
+    }
+
+    public function retrieve_all_jobs_with_all_parameters($country_id, $job_cat_id, $keyword)
+    {
+        $query = "SELECT * from ".$this->_table_name." where country_id = ".$country_id." and job_cat = ".$job_cat_id." and job_title like '%".$keyword."%' ";
+        $result = $this->_dbh->query($query);
+        $trans_data = array();
+        while($row = mysqli_fetch_assoc($result))
+        {
+            $trans_data[] = $row;
+        }
+        return $trans_data;
+    }
+
+
 
 
     public function add_new_data(array $summery_data)
