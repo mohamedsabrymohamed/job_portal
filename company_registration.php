@@ -68,7 +68,7 @@ require_once 'inc.php';
 
                             <button type="submit" class="btn btn-primary btn-lg btn-block">Register Now</button>
                             <div class="bottom">
-                                <span><a href="login.php">Already have A account? Login Now!</a></span><br>
+                                <span><a href="company_login.php">Already have A account? Login Now!</a></span><br>
                             </div>
                         </form>
                     </div>

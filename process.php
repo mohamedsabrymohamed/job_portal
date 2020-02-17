@@ -483,12 +483,47 @@ if($_POST){
 
 
 
+            case 'apply_job':
+                {
+                    if($_POST['uuid'] == 0){
+                        $_SESSION['not_login']= "Please Please login to submit for jobs.";
+                        $notification_string = create_notification_string($notification);
+                        $redirect_path = 'login.php';
+                        ?><script type="text/javascript">window.location = '<?php echo $redirect_path."?not_login=Y"; ?>'; </script><?php
+
+                    }else{
+
+                        $data = array();
+                        $data['user_id']     = $_POST['uuid'];
+                        $data['job_id']      = $_POST['job_id'];
+                        $data['company_id']  = $_POST['comp_id'];
+
+
+                        $user_jobs               = new users_jobs_table();
+                        $add_data                = $user_jobs->add_new_data($data);
+
+                        if ( !empty($add_data) ) {
+                            $redirect_path = 'dashboard.php';
+                            $_SESSION['succ_job_add'] = 'Successfully add Post';
+                            ?><script type="text/javascript">window.location = '<?php echo $redirect_path.'?succ_job_add=Y'; ?>'; </script><?php
+
+
+                        }
+                        else{
+                            $redirect_path = 'job_single.php';
+                            $_SESSION['err_job_add'] = 'Error Creating Post. Please Try Again';
+                            ?><script type="text/javascript">window.location = '<?php echo $redirect_path.'?err_job_add=Y'; ?>'; </script><?php
+                        }
+
+
+                    }
+                    break;
+                }
 
 
 
-
-
-
+                            //////////////////// Admin ///////////////////////
+                            ////////////////////////////////////////////////
             case 'admin_login_form':
                 {
                     $form_type = $_POST['form_type'];
@@ -569,114 +604,6 @@ if($_POST){
                 }
 
 
-
-
-            case 'add_new_report':
-                {
-                $data = array();
-                $data['category_id']     = $_POST['cat_id'];
-                $data['package_type']     = $_POST['type'];
-                $targetfolder            = $_SERVER["DOCUMENT_ROOT"]."/squadro/upload/pdf/";
-                $targetfolder = $targetfolder . basename( $_FILES['file']['name']) ;
-
-                $ok=1;
-
-                $file_type=$_FILES['file']['type'];
-
-                if ($file_type=="application/pdf") {
-
-                    if(move_uploaded_file($_FILES['file']['tmp_name'], $targetfolder))
-
-                    {
-                        $data['file']        = basename( $_FILES['file']['name']);
-                    }
-
-                    else {
-                        $redirect_path = 'add_report.php';
-                        $_SESSION['err_img_upload'] ='Problem uploading file';
-                        ?><script type="text/javascript">window.location = '<?php echo $redirect_path.'?err_img_upload=Y'; ?>'; </script><?php
-
-                    }
-
-                }
-
-                else {
-                    $redirect_path = 'add_report.php';
-                    $_SESSION['err_img_upload'] ='You may only upload PDFs';
-                    ?><script type="text/javascript">window.location = '<?php echo $redirect_path.'?err_img_upload=Y'; ?>'; </script><?php
-                }
-
-                $reports_table              = new reports_data_table();
-                $add_data                = $reports_table->add_new_data($data);
-
-                if ( !empty($add_data) ) {
-                    $redirect_path = 'reports.php';
-                    $_SESSION['succ_post_add'] = 'Successfully add Post';
-                    ?><script type="text/javascript">window.location = '<?php echo $redirect_path.'?succ_post_add=Y'; ?>'; </script><?php
-
-
-                }
-                else{
-                    $redirect_path = 'add_report.php';
-                    $_SESSION['err_post_add'] = 'Error Creating Post. Please Try Again';
-                    ?><script type="text/javascript">window.location = '<?php echo $redirect_path.'?err_post_add=Y'; ?>'; </script><?php
-                }
-
-                break;
-            }
-
-            case 'add_new_video':
-                {
-                    $data = array();
-                    $data['video_title']     = $_POST['title'];
-                    $data['video_desc']     = $_POST['video_desc'];
-                    $data['video_cat']     = $_POST['cat_id'];
-                    $data['vimeo_link']     = $_POST['link'];
-
-                    $video_table              = new videos_data_table();
-                    $add_data                = $video_table->add_new_data($data);
-
-                    if ( !empty($add_data) ) {
-                        $redirect_path = 'videos.php';
-                        $_SESSION['succ_video_add'] = 'Successfully add Post';
-                        ?><script type="text/javascript">window.location = '<?php echo $redirect_path.'?succ_video_add=Y'; ?>'; </script><?php
-
-
-                    }
-                    else{
-                        $redirect_path = 'add_video.php';
-                        $_SESSION['err_video_add'] = 'Error Creating Post. Please Try Again';
-                        ?><script type="text/javascript">window.location = '<?php echo $redirect_path.'?err_video_add=Y'; ?>'; </script><?php
-                    }
-
-                    break;
-                }
-
-            case 'edit_user_package':
-                {
-                    $data = array();
-                    $user_id      = $_POST['uid'];
-                    $data['package_type']     = $_POST['package_type'];
-
-                    $user_orders              = new userorders_table();
-                    $where                   = 'user_id = ' . $user_id;
-                    $edit_data               = $user_orders->update_data($data,$where);
-
-                    if ( !empty($edit_data) ) {
-                        $redirect_path = 'users.php';
-                        $_SESSION['succ_edit_package'] = 'Successfully Edit Package';
-                        ?><script type="text/javascript">window.location = '<?php echo $redirect_path.'?succ_edit_package=Y'; ?>'; </script><?php
-
-
-                    }
-                    else{
-                        $redirect_path = 'change_user_package.php';
-                        $_SESSION['err_edit_package'] = 'Error Creating Post. Please Try Again';
-                        ?><script type="text/javascript">window.location = '<?php echo $redirect_path.'?err_edit_package=Y'; ?>'; </script><?php
-                    }
-
-                    break;
-                }
         }
     }
 }
@@ -686,45 +613,66 @@ if($_POST){
 
 if($_GET) {
 
-    // delete video
+    // mark job under review
 
-    $delvid = @$_GET['delvid'];
-    if ($delvid and !empty($delvid)) {
+    $job_und_rev = @$_GET['job_und_rev'];
+    if ($job_und_rev and !empty($job_und_rev)) {
 
         $notification_string = create_notification_string($notification);
 
-        $video_table = new videos_data_table();
-        $video_data = $video_table->retrieve_video_by_id($delvid);
+        $user_jobs      = new users_jobs_table();
+        $user_jobs_data = $user_jobs->retrieve_user_jobs_by_id($job_und_rev);
 
-        if ($video_data) {
-            $video_table  = new videos_data_table();
-            $cart_delete = $video_table->delete_data($delvid);
+        if ($user_jobs_data) {
+            $user_jobs      = new users_jobs_table();
+            $update_job     = $user_jobs->under_review_job($job_und_rev);
         }
-        $_SESSION['deletevid'] = "Video Deleted Successfully.";
-        $redirect_path = 'videos.php';
+        $_SESSION['under_rev_job'] = "Marked Successfully.";
+        $redirect_path = 'companies/job_applications.php';
         ?>
-        <script type="text/javascript">window.location = '<?php echo $redirect_path . '?deletevid=Y'; ?>'; </script><?php
+        <script type="text/javascript">window.location = '<?php echo $redirect_path . '?under_rev_job=Y'; ?>'; </script><?php
     }
 
 
-    // delete report
+    // Approve Job
 
-    $delrep = @$_GET['delrep'];
-    if ($delrep and !empty($delrep)) {
+    $job_approve = @$_GET['job_approve'];
+    if ($job_approve and !empty($job_approve)) {
 
         $notification_string = create_notification_string($notification);
 
-        $reports_table = new reports_data_table();
-        $reports_data  = $reports_table->retrieve_report_by_id($delrep);
+        $user_jobs      = new users_jobs_table();
+        $user_jobs_data = $user_jobs->retrieve_user_jobs_by_id($job_approve);
 
-        if ($reports_data) {
-            $reports_table  = new reports_data_table();
-            $cart_delete = $reports_table->delete_data($delrep);
+        if ($user_jobs_data) {
+            $user_jobs      = new users_jobs_table();
+            $update_job     = $user_jobs->approve_job($job_approve);
         }
-        $_SESSION['deleterep'] = "Report Deleted Successfully.";
-        $redirect_path = 'reports.php';
+        $_SESSION['approve_job'] = "Approved Successfully.";
+        $redirect_path = 'companies/job_applications.php';
         ?>
-        <script type="text/javascript">window.location = '<?php echo $redirect_path . '?deleterep=Y'; ?>'; </script><?php
+        <script type="text/javascript">window.location = '<?php echo $redirect_path . '?approve_job=Y'; ?>'; </script><?php
+    }
+
+
+    // Approve Job
+
+    $job_reject = @$_GET['job_reject'];
+    if ($job_reject and !empty($job_reject)) {
+
+        $notification_string = create_notification_string($notification);
+
+        $user_jobs      = new users_jobs_table();
+        $user_jobs_data = $user_jobs->retrieve_user_jobs_by_id($job_reject);
+
+        if ($user_jobs_data) {
+            $user_jobs      = new users_jobs_table();
+            $update_job     = $user_jobs->reject_job($job_reject);
+        }
+        $_SESSION['reject_job'] = "Rejected Successfully.";
+        $redirect_path = 'companies/job_applications.php';
+        ?>
+        <script type="text/javascript">window.location = '<?php echo $redirect_path . '?reject_job=Y'; ?>'; </script><?php
     }
 
 

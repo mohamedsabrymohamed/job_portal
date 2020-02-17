@@ -47,6 +47,10 @@ require_once 'inc.php';
                         ?>
                             <p class="alert-danger"> <?php echo $_SESSION['errup'];?></p>
                             <?php
+                        }elseif (isset($_SESSION['not_login']) && $_GET['not_login'] == 'Y'){
+                            ?>
+                            <p class="alert-danger"> <?php echo $_SESSION['not_login'];?></p>
+                            <?php
                         }?>
                         <form class="form-auth-small" action="process.php" method="post">
                             <input type="hidden" name="form_name" value="user_login">

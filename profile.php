@@ -1,7 +1,11 @@
 <?php
 require_once 'dashboard_header.php';
-$user_table = new users_table();
-$user_data  = $user_table->retrieve_user_info(get_login_user_id());
+$user_table         = new users_table();
+$user_data          = $user_table->retrieve_user_info(get_login_user_id());
+$user_jobs_table    = new users_jobs_table();
+$user_applied_jobs  = $user_jobs_table->retrieve_all_user_applied_jobs_by_user_id(get_login_user_id());
+$user_approved_jobs = $user_jobs_table->retrieve_all_user_approved_jobs_by_user_id(get_login_user_id());
+
 ?>
 
     <div id="wrapper">
@@ -35,10 +39,10 @@ $user_data  = $user_table->retrieve_user_info(get_login_user_id());
                                 <div class="row">
 
                                     <div class="col-md-6 stat-item">
-                                        15 <span>Applied</span>
+                                        <?php echo count($user_applied_jobs);?> <span>Applied</span>
                                     </div>
                                     <div class="col-md-6 stat-item">
-                                        2 <span>Approved</span>
+                                        <?php echo count($user_approved_jobs);?> <span>Approved</span>
                                     </div>
                                 </div>
                             </div>

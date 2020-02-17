@@ -23,3 +23,4 @@ require_once 'job_cat_table.php';
 require_once 'functions_company.php';
 require_once 'companies.php';
 require_once 'jobs_table.php';
+require_once 'users_jobs.php';

@@ -52,7 +52,7 @@ require_once 'header.php';
                         <h3><?php echo $single_job['job_title']?></h3>
                             <p class="flex-text text-muted"><?php echo substr($single_job['job_desc'], 0, 100);?></p>
                             <p>
-                                <a class="btn btn-primary" href="#">Details</a>
+                                <a class="btn btn-primary" href="job_single.php?id=<?php echo $single_job['id'];?>">Details</a>
                             </p>
                     </div>
                     <!-- /.caption -->

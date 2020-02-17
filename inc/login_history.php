@@ -115,7 +115,6 @@ public function update_login_company($user_id,$session_id)
 					SESSIONID = '".$session_id."'
 					and
 					USER_ID ='".$user_id."'";
-
     $result = $this->_dbh->query($query);
 
     if($result)
