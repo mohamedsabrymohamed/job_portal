@@ -132,4 +132,17 @@ class jobs_table
     }
 
 
+    public function retrieve_all_jobs_with_company_id($company_id)
+    {
+        $query = "SELECT * from ".$this->_table_name." where company_id = ".$company_id;
+        $result = $this->_dbh->query($query);
+        $trans_data = array();
+        while($row = mysqli_fetch_assoc($result))
+        {
+            $trans_data[] = $row;
+        }
+        return $trans_data;
+    }
+
+
 }

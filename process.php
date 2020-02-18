@@ -243,6 +243,43 @@ if($_POST){
                     break;
                 }
 
+            case 'apply_job':
+                {
+                    if($_POST['uuid'] == 0){
+                        $_SESSION['not_login']= "Please Please login to submit for jobs.";
+                        $notification_string = create_notification_string($notification);
+                        $redirect_path = 'login.php';
+                        ?><script type="text/javascript">window.location = '<?php echo $redirect_path."?not_login=Y"; ?>'; </script><?php
+
+                    }else{
+
+                        $data = array();
+                        $data['user_id']     = $_POST['uuid'];
+                        $data['job_id']      = $_POST['job_id'];
+                        $data['company_id']  = $_POST['comp_id'];
+
+
+                        $user_jobs               = new users_jobs_table();
+                        $add_data                = $user_jobs->add_new_data($data);
+
+                        if ( !empty($add_data) ) {
+                            $redirect_path = 'dashboard.php';
+                            $_SESSION['succ_job_add'] = 'Successfully add Post';
+                            ?><script type="text/javascript">window.location = '<?php echo $redirect_path.'?succ_job_add=Y'; ?>'; </script><?php
+
+
+                        }
+                        else{
+                            $redirect_path = 'job_single.php';
+                            $_SESSION['err_job_add'] = 'Error Creating Post. Please Try Again';
+                            ?><script type="text/javascript">window.location = '<?php echo $redirect_path.'?err_job_add=Y'; ?>'; </script><?php
+                        }
+
+
+                    }
+                    break;
+                }
+
 
 
                             //////////////////// Companies ///////////////////////
@@ -483,125 +520,158 @@ if($_POST){
 
 
 
-            case 'apply_job':
+            case 'edit_job':
                 {
-                    if($_POST['uuid'] == 0){
-                        $_SESSION['not_login']= "Please Please login to submit for jobs.";
-                        $notification_string = create_notification_string($notification);
-                        $redirect_path = 'login.php';
-                        ?><script type="text/javascript">window.location = '<?php echo $redirect_path."?not_login=Y"; ?>'; </script><?php
+                    $data = array();
+                    $data['job_title']      = $_POST['job_title'];
+                    $data['salary']         = $_POST['salary'];
+                    $data['country_id']     = $_POST['country_id'];
+                    $data['job_cat']        = $_POST['cat_id'];
+                    $data['job_desc']       = $_POST['job_desc'];
+                    $data['company_id']     = get_login_company_id_company();
 
-                    }else{
-
-                        $data = array();
-                        $data['user_id']     = $_POST['uuid'];
-                        $data['job_id']      = $_POST['job_id'];
-                        $data['company_id']  = $_POST['comp_id'];
-
-
-                        $user_jobs               = new users_jobs_table();
-                        $add_data                = $user_jobs->add_new_data($data);
-
-                        if ( !empty($add_data) ) {
-                            $redirect_path = 'dashboard.php';
-                            $_SESSION['succ_job_add'] = 'Successfully add Post';
-                            ?><script type="text/javascript">window.location = '<?php echo $redirect_path.'?succ_job_add=Y'; ?>'; </script><?php
+                    $jobs_table             = new jobs_table();
+                    $where                  = 'id = ' . $_POST['job_id'];
+                    $add_data               = $jobs_table->update_data($data,$where);
 
 
-                        }
-                        else{
-                            $redirect_path = 'job_single.php';
-                            $_SESSION['err_job_add'] = 'Error Creating Post. Please Try Again';
-                            ?><script type="text/javascript">window.location = '<?php echo $redirect_path.'?err_job_add=Y'; ?>'; </script><?php
-                        }
+                    if ( !empty($add_data) ) {
+                        $redirect_path = 'companies/job_posts.php';
+                        $_SESSION['succ_post_add'] = 'Successfully edit Post';
+                        ?><script type="text/javascript">window.location = '<?php echo $redirect_path.'?succ_post_add=Y'; ?>'; </script><?php
 
 
+                    }
+                    else{
+                        $redirect_path = 'companies/job_posts.php';
+                        $_SESSION['err_post_add'] = 'Error Creating Post. Please Try Again';
+                        ?><script type="text/javascript">window.location = '<?php echo $redirect_path.'?err_post_add=Y'; ?>'; </script><?php
+                    }
+
+                    break;
+                }
+
+
+
+
+
+            case 'edit_job_cat':
+                {
+
+                    $data = array();
+                    $data['category_name']      = $_POST['job_cat_name'];
+
+                    $job_cat_table              = new job_cat_table();
+                    $where                      = 'id = ' . $_POST['cat_id'];
+                    $edit_data                  = $job_cat_table->update_data($data,$where);
+
+                    if ( !empty($add_data) ) {
+                        $redirect_path = 'companies/job_categories.php';
+                        $_SESSION['succ_post_add'] = 'Successfully edit category';
+                        ?><script type="text/javascript">window.location = '<?php echo $redirect_path.'?succ_post_add=Y'; ?>'; </script><?php
+
+
+                    }
+                    else{
+                        $redirect_path = 'companies/job_categories.php';
+                        $_SESSION['err_post_add'] = 'Error Creating Post. Please Try Again';
+                        ?><script type="text/javascript">window.location = '<?php echo $redirect_path.'?err_post_add=Y'; ?>'; </script><?php
+                    }
+                    break;
+                }
+
+
+            case 'add_job_cat':
+                {
+
+                    $data = array();
+                    $data['category_name']      = $_POST['job_cat_name'];
+
+                    $job_cat_table              = new job_cat_table();
+                    $edit_data                  = $job_cat_table->add_new_data($data);
+
+                    if ( !empty($add_data) ) {
+                        $redirect_path = 'companies/job_categories.php';
+                        $_SESSION['succ_post_add'] = 'Successfully Add category';
+                        ?><script type="text/javascript">window.location = '<?php echo $redirect_path.'?succ_post_add=Y'; ?>'; </script><?php
+
+
+                    }
+                    else{
+                        $redirect_path = 'companies/job_categories.php';
+                        $_SESSION['err_post_add'] = 'Error Creating Post. Please Try Again';
+                        ?><script type="text/javascript">window.location = '<?php echo $redirect_path.'?err_post_add=Y'; ?>'; </script><?php
                     }
                     break;
                 }
 
 
 
-                            //////////////////// Admin ///////////////////////
-                            ////////////////////////////////////////////////
-            case 'admin_login_form':
+
+
+
+            case 'add_event':
                 {
-                    $form_type = $_POST['form_type'];
-                    $user_email = $_POST['email'];
-                    $user_password = $_POST['password'];
-                    $admins_table = new admins_table();
-                    $admin_id = $admins_table->verify_user($user_email, $user_password);
-                    $user_type=$admins_table->retrieve_user($admin_id);
-                    $login_table = new log_table();
-                    if (empty($admin_id)){
-                        $reason="wrong username or password";
-                         $notification['error'][] = "Please check username or password.";
-                        $_SESSION['errup']= "Please check username or password.";
-                        $notification_string = create_notification_string($notification);
-                        $redirect_path = 'index.php';
-                        ?><script type="text/javascript">window.location = '<?php echo $redirect_path."?errup=Y"; ?>'; </script><?php
+                    $data = array();
+                    $data['event_title']        = $_POST['event_title'];
+                    $data['event_date']         = $_POST['event_date'];
+                    $data['country_id']         = $_POST['country_id'];
+                    $data['location']           = $_POST['event_location'];
+                    $data['event_desc']         = $_POST['event_desc'];
+                    $data['company_id']         = get_login_company_id_company();
+
+                    $events_table             = new events_table();
+                    $add_data                 = $events_table->add_new_data($data);
+
+                    if ( !empty($add_data) ) {
+                        $redirect_path = 'companies/event_posts.php';
+                        $_SESSION['succ_post_add'] = 'Successfully add Post';
+                        ?><script type="text/javascript">window.location = '<?php echo $redirect_path.'?succ_post_add=Y'; ?>'; </script><?php
+
 
                     }
-
-                    $errors = $notification['error'];
-                    if($errors and !empty($errors))
-                    {
-
-                        $notification_string = create_notification_string($notification);
-                        $_SESSION['login_error']=$notification_string;
-                        $redirect_path = 'index.php';
-
-                        if($form_type!="ajax")
-                        {
-                            ?><script type="text/javascript">window.location = '<?php echo $redirect_path; ?>'; </script><?php
-                        }
-                        else
-                        {
-                            foreach($errors as $error)
-                                $notification['error']= array();
-
-                        }
-                    }
-                    else
-                    {
-                        if($form_type=="ajax")
-                        {
-                            if($admin_id and !empty($admin_id))
-                            {
-
-                                $_SESSION['user_id'] = $admin_id;
-                                $_SESSION['timeout'] = time();
-                                $_SESSION['web_session_timeout'] = 900;
-
-                                $log_table = new log_table();
-                                $log_table->create_login_log();
-
-                            }
-
-                            else
-                            {
-
-                                $notification['error'][] = "Something went wrong. Please check again.";
-                                $_SESSION['u_no_login_error']= "Something went wrong. Please check again.";
-                                setcookie("err_count",$count + 1,+time() + 60);
-                                $notification_string = create_notification_string($notification);
-                                $redirect_path = 'index.php';
-                                ?><script type="text/javascript">window.location = '<?php echo $redirect_path."?nou=Y"; ?>'; </script><?php
-                            }
-
-
-                            $user_type=$admins_table->retrieve_user($admin_id);
-                            $login_table = new log_table();
-                            $redirect_path = 'welcome.php';
-
-
-                            ?><script type="text/javascript">window.location = '<?php echo $redirect_path;?>'; </script><?php
-
-                        }
+                    else{
+                        $redirect_path = 'companies/event_posts.php';
+                        $_SESSION['err_post_add'] = 'Error Creating Post. Please Try Again';
+                        ?><script type="text/javascript">window.location = '<?php echo $redirect_path.'?err_post_add=Y'; ?>'; </script><?php
                     }
 
                     break;
                 }
+
+
+            case 'edit_event':
+                {
+                    $data = array();
+                    $data['event_title']       = $_POST['event_title'];
+                    $data['event_date']        = $_POST['event_date'];
+                    $data['country_id']        = $_POST['country_id'];
+                    $data['location']           = $_POST['event_location'];
+                    $data['event_desc']        = $_POST['event_desc'];
+                    $data['company_id']        = get_login_company_id_company();
+
+                    $events_table             = new events_table();
+                    $where                    = 'id = ' . $_POST['event_id'];
+                    $add_data                 = $events_table->update_data($data,$where);
+
+                    if ( !empty($add_data) ) {
+                        $redirect_path = 'companies/event_posts.php';
+                        $_SESSION['succ_post_add'] = 'Successfully edit Post';
+                        ?><script type="text/javascript">window.location = '<?php echo $redirect_path.'?succ_post_add=Y'; ?>'; </script><?php
+
+
+                    }
+                    else{
+                        $redirect_path = 'companies/event_posts.php';
+                        $_SESSION['err_post_add'] = 'Error Creating Post. Please Try Again';
+                        ?><script type="text/javascript">window.location = '<?php echo $redirect_path.'?err_post_add=Y'; ?>'; </script><?php
+                    }
+
+                    break;
+                }
+
+
+
 
 
         }

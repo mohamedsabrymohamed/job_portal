@@ -57,7 +57,7 @@ require_once 'header.php';
         </div>
 
         <div class="btn-wrap-go" style="margin-top: 1.7%;">
-            <button type="submit">Go!</button>
+            <button type="submit" >Go!</button>
 
         </div>
     </div>

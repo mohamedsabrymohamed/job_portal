@@ -31,6 +31,7 @@
     <script src="main.js"></script>
 </head>
 
+
 <body>
 
 <link href='https://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
@@ -41,7 +42,7 @@
     <div id="navbar">
 
         <a href="jobs.php">Browse Jobs</a>
-        <a href="jobs.php">Events</a>
+        <a href="events.php">Events</a>
 
 
         <?php
